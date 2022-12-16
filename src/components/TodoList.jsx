@@ -4,6 +4,8 @@ import { create, done } from "../store/modules/todo";
 
 export default function TodoList() {
   const list = useSelector((state) => state.todo.list).filter((el) => el.done === false);
+
+  const nextID = useSelector((state) => state.todo.nextID);
   const inputRef = useRef();
   const dispatch = useDispatch();
 
@@ -14,7 +16,7 @@ export default function TodoList() {
         <input type="text" ref={inputRef} />
         <button
           onClick={() => {
-            dispatch(create({ id: list.length, text: inputRef.current.value }));
+            dispatch(create({ id: nextID, text: inputRef.current.value }));
             inputRef.current.value = "";
           }}
         >
@@ -23,7 +25,12 @@ export default function TodoList() {
       </div>
       <ul>
         {list.map((el) => {
-          return <li key={el.id}>{el.text}</li>;
+          return (
+            <li key={el.id}>
+              {el.text}
+              <button onClick={() => dispatch(done(el.id))}>완료</button>
+            </li>
+          );
         })}
       </ul>
     </section>

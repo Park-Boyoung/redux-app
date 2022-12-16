@@ -7,6 +7,10 @@ const initState = {
   ],
 };
 
+const counts = initState.list.length;
+// initState.nextID = counts;
+initState["nextID"] = counts;
+
 // 액션 타입 정의
 const CREATE = "todo/CREATE";
 const DONE = "todo/DONE";
@@ -38,9 +42,23 @@ export default function todo(state = initState, action) {
           text: action.payload.text,
           done: false,
         }),
+        nextID: action.payload.id + 1,
       };
     case DONE:
-      return console.log("DONE 호출");
+      // return console.log("DONE 호출");
+      return {
+        ...state,
+        list: state.list.map((el) => {
+          if (el.id === action.id) {
+            return {
+              ...el,
+              done: true,
+            };
+          } else {
+            return el;
+          }
+        }),
+      };
     default:
       return state;
   }
